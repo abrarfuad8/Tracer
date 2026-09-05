@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../models/lost_item.dart';
+import '../models/user.dart';
 import '../services/lost_item_service.dart';
 import 'item_details_page.dart';
 import 'lost_items_page.dart';
 import 'report_lost_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final User user;
+
+  const HomePage({super.key, required this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();

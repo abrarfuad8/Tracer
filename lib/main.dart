@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/home_page.dart';
+import 'screens/login_page.dart';
 
 void main() {
   runApp(const TracerApp());
@@ -14,7 +14,7 @@ class TracerApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Tracer',
-      home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }
