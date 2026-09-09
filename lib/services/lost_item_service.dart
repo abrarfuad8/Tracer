@@ -46,6 +46,36 @@ class LostItemService {
     }).toList();
   }
 
+  Future<List<LostItem>> getLostItemsByOwner(String ownerId) async {
+    final db = await _databaseHelper.database;
+
+    final List<Map<String, dynamic>> maps = await db.query(
+      'lost_items',
+      where: 'ownerId = ?',
+      whereArgs: [ownerId],
+      orderBy: 'dateLost DESC',
+    );
+
+    return maps.map((map) {
+      return LostItem(
+        id: map['id'] as String,
+        title: map['title'] as String,
+        category: ItemCategory.values.firstWhere(
+          (category) => category.name == map['category'],
+        ),
+        description: map['description'] as String,
+        location: map['location'] as String,
+        dateLost: DateTime.parse(map['dateLost'] as String),
+        imageUrl: map['imageUrl'] as String?,
+        status: ItemStatus.values.firstWhere(
+          (status) => status.name == map['status'],
+        ),
+        contactInfo: map['contactInfo'] as String,
+        ownerId: map['ownerId'] as String,
+      );
+    }).toList();
+  }
+
   Map<String, int> getStatistics(List<LostItem> items) {
     int lostCount = 0;
     int foundCount = 0;

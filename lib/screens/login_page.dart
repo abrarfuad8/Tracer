@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/user_service.dart';
+import 'forgot_password_page.dart';
 import 'home_page.dart';
 import 'register_page.dart';
 
@@ -81,6 +82,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void _openForgotPasswordPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,10 +101,12 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const SizedBox(height: 30),
 
+              // App Icon
               const Icon(Icons.track_changes, size: 80),
 
               const SizedBox(height: 20),
 
+              // Welcome Text
               const Text(
                 'Welcome to Tracer',
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
@@ -111,6 +121,7 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 35),
 
+              // Email
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -137,9 +148,16 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 20),
 
+              // Password
               TextFormField(
                 controller: _passwordController,
                 obscureText: !_isPasswordVisible,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) {
+                  if (!_isLoading) {
+                    _login();
+                  }
+                },
                 decoration: InputDecoration(
                   labelText: 'Password',
                   prefixIcon: const Icon(Icons.lock_outline),
@@ -168,18 +186,18 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 10),
 
+              // Forgot Password
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {
-                    // We will add Forgot Password here.
-                  },
+                  onPressed: _openForgotPasswordPage,
                   child: const Text('Forgot Password?'),
                 ),
               ),
 
               const SizedBox(height: 15),
 
+              // Login Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -196,6 +214,7 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 20),
 
+              // Register
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

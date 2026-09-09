@@ -49,4 +49,17 @@ class UserService {
       password: user['password'] as String,
     );
   }
+
+  Future<bool> updatePassword(String email, String newPassword) async {
+    final db = await _databaseHelper.database;
+
+    final result = await db.update(
+      'users',
+      {'password': newPassword},
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+
+    return result > 0;
+  }
 }
