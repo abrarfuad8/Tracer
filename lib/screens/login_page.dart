@@ -91,141 +91,187 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 30, 24, 30),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
 
-              // App Icon
-              const Icon(Icons.track_changes, size: 80),
-
-              const SizedBox(height: 20),
-
-              // Welcome Text
-              const Text(
-                'Welcome to Tracer',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              ),
-
-              const SizedBox(height: 8),
-
-              const Text(
-                'Sign in to manage your lost item reports.',
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 35),
-
-              // Email
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  prefixIcon: Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(),
+                // =====================================================
+                // APP LOGO
+                // =====================================================
+                Container(
+                  width: 82,
+                  height: 82,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF3A6),
+                    borderRadius: BorderRadius.circular(26),
+                  ),
+                  child: Icon(
+                    Icons.track_changes_rounded,
+                    size: 45,
+                    color: colors.primary,
+                  ),
                 ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter your email';
-                  }
 
-                  final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+                const SizedBox(height: 22),
 
-                  if (!emailRegex.hasMatch(value.trim())) {
-                    return 'Please enter a valid email';
-                  }
+                // =====================================================
+                // WELCOME
+                // =====================================================
+                Text(
+                  'Welcome to Tracer',
+                  style: theme.textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
+                ),
 
-                  return null;
-                },
-              ),
+                const SizedBox(height: 8),
 
-              const SizedBox(height: 20),
+                Text(
+                  'Sign in to manage your lost item reports.',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium,
+                ),
 
-              // Password
-              TextFormField(
-                controller: _passwordController,
-                obscureText: !_isPasswordVisible,
-                textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) {
-                  if (!_isLoading) {
-                    _login();
-                  }
-                },
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                const SizedBox(height: 34),
+
+                // =====================================================
+                // EMAIL
+                // =====================================================
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Email', style: theme.textTheme.labelLarge),
+                ),
+
+                const SizedBox(height: 8),
+
+                TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your email',
+                    prefixIcon: Icon(Icons.email_outlined),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter your email';
+                    }
+
+                    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+                    if (!emailRegex.hasMatch(value.trim())) {
+                      return 'Please enter a valid email';
+                    }
+
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 18),
+
+                // =====================================================
+                // PASSWORD
+                // =====================================================
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Password', style: theme.textTheme.labelLarge),
+                ),
+
+                const SizedBox(height: 8),
+
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: !_isPasswordVisible,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) {
+                    if (!_isLoading) {
+                      _login();
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Enter your password',
+                    prefixIcon: const Icon(Icons.lock_outline_rounded),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                      ),
                     ),
                   ),
-                  border: const OutlineInputBorder(),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
 
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 10),
-
-              // Forgot Password
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: _openForgotPasswordPage,
-                  child: const Text('Forgot Password?'),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              // Login Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _login,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Login'),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Register
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don't have an account?"),
-                  TextButton(
-                    onPressed: _openRegisterPage,
-                    child: const Text('Create Account'),
+                // =====================================================
+                // FORGOT PASSWORD
+                // =====================================================
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: _openForgotPasswordPage,
+                    child: const Text('Forgot Password?'),
                   ),
-                ],
-              ),
-            ],
+                ),
+
+                const SizedBox(height: 8),
+
+                // =====================================================
+                // LOGIN BUTTON
+                // =====================================================
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _login,
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 21,
+                            width: 21,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Login'),
+                  ),
+                ),
+
+                const SizedBox(height: 22),
+
+                // =====================================================
+                // REGISTER
+                // =====================================================
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account?",
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    TextButton(
+                      onPressed: _openRegisterPage,
+                      child: const Text('Create Account'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
