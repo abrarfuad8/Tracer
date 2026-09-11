@@ -50,6 +50,25 @@ class UserService {
     );
   }
 
+  Future<User?> getUserById(String id) async {
+    final db = await _databaseHelper.database;
+
+    final result = await db.query('users', where: 'id = ?', whereArgs: [id]);
+
+    if (result.isEmpty) {
+      return null;
+    }
+
+    final user = result.first;
+
+    return User(
+      id: user['id'] as String,
+      name: user['name'] as String,
+      email: user['email'] as String,
+      password: user['password'] as String,
+    );
+  }
+
   Future<bool> updatePassword(String email, String newPassword) async {
     final db = await _databaseHelper.database;
 

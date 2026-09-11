@@ -9,7 +9,6 @@ import '../services/lost_item_service.dart';
 import 'item_details_page.dart';
 import 'lost_items_page.dart';
 import 'my_reports_page.dart';
-import 'profile_page.dart';
 import 'report_lost_page.dart';
 import 'settings_page.dart';
 
@@ -137,15 +136,6 @@ class _HomePageState extends State<HomePage> {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => MyReportsPage(user: widget.user)),
-    );
-
-    await _loadLostItems();
-  }
-
-  Future<void> _openProfile() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ProfilePage(user: widget.user)),
     );
 
     await _loadLostItems();
@@ -645,6 +635,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildRecentItemCard(LostItem item) {
     final statusColor = _getStatusColor(item.status);
+
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
@@ -908,14 +899,14 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
 
-                        // Theme toggle
                         _buildThemeButton(),
 
                         const SizedBox(width: 6),
 
-                        // Profile
+                        // Settings
                         IconButton(
-                          onPressed: _openProfile,
+                          onPressed: _openSettings,
+                          tooltip: 'Settings',
                           style: IconButton.styleFrom(
                             backgroundColor: Theme.of(
                               context,
@@ -924,10 +915,7 @@ class _HomePageState extends State<HomePage> {
                             maximumSize: const Size(38, 38),
                             padding: EdgeInsets.zero,
                           ),
-                          icon: const Icon(
-                            Icons.person_outline_rounded,
-                            size: 20,
-                          ),
+                          icon: const Icon(Icons.settings_outlined, size: 20),
                         ),
                       ],
                     ),
@@ -941,30 +929,6 @@ class _HomePageState extends State<HomePage> {
                       _buildSearchButton(),
 
                     const SizedBox(height: 24),
-
-                    // =====================================================
-                    // WELCOME
-                    // =====================================================
-                    Text(
-                      'Welcome, ${widget.user.name}',
-                      style: const TextStyle(
-                        fontSize: 23,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-
-                    const SizedBox(height: 5),
-
-                    Text(
-                      'Track lost items and help them find their way home.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).textTheme.bodyMedium?.color,
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
 
                     // =====================================================
                     // OVERVIEW
@@ -1066,14 +1030,6 @@ class _HomePageState extends State<HomePage> {
                           icon: Icons.assignment_outlined,
                           label: 'My Reports',
                           onTap: _openMyReports,
-                        ),
-
-                        const SizedBox(width: 9),
-
-                        _buildQuickAction(
-                          icon: Icons.settings_outlined,
-                          label: 'Settings',
-                          onTap: _openSettings,
                         ),
                       ],
                     ),

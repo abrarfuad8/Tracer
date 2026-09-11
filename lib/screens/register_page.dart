@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../models/user.dart';
+import '../services/session_service.dart';
 import '../services/user_service.dart';
+import 'welcome_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -20,6 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final UserService _userService = UserService();
 
+  bool _rememberMe = false;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
@@ -65,11 +68,21 @@ class _RegisterPageState extends State<RegisterPage> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created successfully')),
-      );
+      if (_rememberMe) {
+        await SessionService.rememberUser(user);
+      } else {
+        await SessionService.clearRememberedUser();
+      }
 
-      Navigator.pop(context);
+      if (!mounted) return;
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) =>
+              WelcomePage(user: user, rememberMe: _rememberMe),
+        ),
+        (route) => false,
+      );
     } catch (e) {
       if (!mounted) return;
 
@@ -162,7 +175,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     return 'Please enter a valid email';
                   }
 
-                  // Commonly mistyped email domains
                   const invalidDomains = {
                     'gmai.com',
                     'gmial.com',
@@ -174,7 +186,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     'yahoo.con',
                     'hotmai.com',
                     'hotmial.com',
-
                     'outlok.com',
                     'outlook.con',
                     'gmail.om',
@@ -317,7 +328,25 @@ class _RegisterPageState extends State<RegisterPage> {
                 },
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 8),
+
+              Row(
+                children: [
+                  Checkbox(
+                    value: _rememberMe,
+                    onChanged: _isLoading
+                        ? null
+                        : (value) {
+                            setState(() {
+                              _rememberMe = value ?? false;
+                            });
+                          },
+                  ),
+                  const Text('Remember Me'),
+                ],
+              ),
+
+              const SizedBox(height: 16),
 
               SizedBox(
                 width: double.infinity,

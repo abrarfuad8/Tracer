@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../Theme/app_theme.dart';
 import '../models/user.dart';
-import 'login_page.dart';
+import '../services/session_service.dart';
+import 'goodbye_page.dart';
 import 'profile_page.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -41,8 +42,14 @@ class SettingsPage extends StatelessWidget {
       return;
     }
 
+    await SessionService.clearRememberedUser();
+
+    if (!context.mounted) {
+      return;
+    }
+
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const LoginPage()),
+      MaterialPageRoute(builder: (context) => const GoodbyePage()),
       (route) => false,
     );
   }
@@ -69,47 +76,49 @@ class SettingsPage extends StatelessWidget {
               _buildSection(
                 context,
                 children: [
-                  _buildSettingTile(
-                    context: context,
-                    icon: Icons.wb_sunny_outlined,
-                    title: 'Light Mode',
-                    subtitle: 'Use the light appearance',
-                    trailing: Radio<ThemeMode>(
-                      value: ThemeMode.light,
-                      groupValue: themeMode,
-                      onChanged: (value) {
-                        if (value != null) {
-                          AppTheme.setThemeMode(value);
-                        }
-                      },
-                    ),
-                    onTap: () {
-                      AppTheme.setThemeMode(ThemeMode.light);
+                  RadioGroup<ThemeMode>(
+                    groupValue: themeMode,
+                    onChanged: (ThemeMode? value) {
+                      if (value != null) {
+                        AppTheme.setThemeMode(value);
+                      }
                     },
-                  ),
-                  Divider(
-                    height: 1,
-                    indent: 58,
-                    endIndent: 16,
-                    color: colorScheme.outlineVariant,
-                  ),
-                  _buildSettingTile(
-                    context: context,
-                    icon: Icons.dark_mode_outlined,
-                    title: 'Dark Mode',
-                    subtitle: 'Use the darker appearance',
-                    trailing: Radio<ThemeMode>(
-                      value: ThemeMode.dark,
-                      groupValue: themeMode,
-                      onChanged: (value) {
-                        if (value != null) {
-                          AppTheme.setThemeMode(value);
-                        }
-                      },
+                    child: Column(
+                      children: [
+                        _buildSettingTile(
+                          context: context,
+                          icon: Icons.wb_sunny_outlined,
+                          title: 'Light Mode',
+                          subtitle: 'Use the light appearance',
+                          trailing: const Radio<ThemeMode>(
+                            value: ThemeMode.light,
+                          ),
+                          onTap: () {
+                            AppTheme.setThemeMode(ThemeMode.light);
+                          },
+                        ),
+
+                        Divider(
+                          height: 1,
+                          indent: 58,
+                          endIndent: 16,
+                          color: colorScheme.outlineVariant,
+                        ),
+
+                        _buildSettingTile(
+                          context: context,
+                          icon: Icons.dark_mode_outlined,
+                          title: 'Dark Mode',
+                          subtitle: 'Use the darker appearance',
+                          trailing: const Radio<ThemeMode>(
+                            value: ThemeMode.dark,
+                          ),
+                          onTap: () {
+                            AppTheme.setThemeMode(ThemeMode.dark);
+                          },
+                        ),
+                      ],
                     ),
-                    onTap: () {
-                      AppTheme.setThemeMode(ThemeMode.dark);
-                    },
                   ),
                 ],
               ),
@@ -141,12 +150,14 @@ class SettingsPage extends StatelessWidget {
                       );
                     },
                   ),
+
                   Divider(
                     height: 1,
                     indent: 58,
                     endIndent: 16,
                     color: colorScheme.outlineVariant,
                   ),
+
                   _buildSettingTile(
                     context: context,
                     icon: Icons.lock_outline,

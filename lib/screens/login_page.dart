@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../services/session_service.dart';
 import '../services/user_service.dart';
 import 'forgot_password_page.dart';
 import 'home_page.dart';
 import 'register_page.dart';
+import 'welcome_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isPasswordVisible = false;
   bool _isLoading = false;
+  bool _rememberMe = false;
 
   @override
   void dispose() {
@@ -55,11 +58,27 @@ class _LoginPageState extends State<LoginPage> {
 
         return;
       }
+      if (_rememberMe) {
+        await SessionService.rememberUser(user);
+      } else {
+        await SessionService.clearRememberedUser();
+      }
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(user: user)),
-      );
+      if (!mounted) return;
+
+      if (_rememberMe) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => HomePage(user: user)),
+          (route) => false,
+        );
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => WelcomePage(user: user, rememberMe: false),
+          ),
+          (route) => false,
+        );
+      }
     } catch (e) {
       if (!mounted) return;
 
@@ -221,6 +240,21 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
 
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _rememberMe,
+                      onChanged: _isLoading
+                          ? null
+                          : (value) {
+                              setState(() {
+                                _rememberMe = value ?? false;
+                              });
+                            },
+                    ),
+                    const Text('Remember Me'),
+                  ],
+                ),
                 // =====================================================
                 // FORGOT PASSWORD
                 // =====================================================
