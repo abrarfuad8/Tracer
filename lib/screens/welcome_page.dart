@@ -35,10 +35,11 @@ class WelcomePage extends StatelessWidget {
                     color: AppTheme.paleLemon,
                     borderRadius: BorderRadius.circular(26),
                   ),
-                  child: Icon(
-                    Icons.track_changes_rounded,
-                    size: 42,
-                    color: AppTheme.silkBlueStrong,
+                  child: Image.asset(
+                    'assets/images/hi.gif',
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.contain,
                   ),
                 ),
                 const SizedBox(height: 24),

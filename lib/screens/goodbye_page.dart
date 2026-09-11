@@ -48,7 +48,12 @@ class _GoodbyePageState extends State<GoodbyePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('🐥', style: TextStyle(fontSize: 76)),
+                Image.asset(
+                  'assets/images/cryingDuck.gif',
+                  width: 180,
+                  height: 180,
+                  fit: BoxFit.contain,
+                ),
                 const SizedBox(height: 20),
                 const Text(
                   'Goodbye!',

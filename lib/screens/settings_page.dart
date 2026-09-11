@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../Theme/app_theme.dart';
 import '../models/user.dart';
 import '../services/session_service.dart';
+import 'about_tracer_page.dart';
 import 'goodbye_page.dart';
 import 'profile_page.dart';
 
@@ -235,12 +236,11 @@ class SettingsPage extends StatelessWidget {
                       color: colorScheme.onSurfaceVariant,
                     ),
                     onTap: () {
-                      showAboutDialog(
-                        context: context,
-                        applicationName: 'Tracer',
-                        applicationVersion: '1.0.0',
-                        applicationLegalese:
-                            'A university final project for managing lost and found items.',
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutTracerPage(),
+                        ),
                       );
                     },
                   ),
